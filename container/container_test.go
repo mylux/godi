@@ -62,9 +62,9 @@ func setUp() {
 	CleanRegistry()
 }
 
-func TestWireInt(t *testing.T) {
+func TestWireIntWithFactory(t *testing.T) {
 	setUp()
-	err := Wire(createInt)
+	err := WireFactory(createInt)
 	if err != nil {
 		fmt.Printf("Error: %s\n", err.Error())
 	}
@@ -72,26 +72,34 @@ func TestWireInt(t *testing.T) {
 	assert.Equal(t, number, 42)
 }
 
-func TestWireLogger(t *testing.T) {
+func TestWireLoggerWithFactory(t *testing.T) {
 	setUp()
-	err := Wire(createLogger)
+	err := WireFactory(createLogger)
 	assert.Nil(t, err)
-	err = Wire(createLoggerType)
+	err = WireFactory(createLoggerType)
 	assert.Nil(t, err)
 
 	l := *Construct[Logger]()
-	l.Error("Meu erro!")
+	l.Error("My error!")
 }
 
-func TestAutoWireLoggers(t *testing.T) {
+func TestAutoWireLoggersWithFactory(t *testing.T) {
 	setUp()
-	err := Wire(createLogger)
+	err := WireFactory(createLogger)
 	assert.Nil(t, err)
-	err = Wire(createLoggerType)
+	err = WireFactory(createLoggerType)
 	assert.Nil(t, err)
 	m := ManyLoggers{}
 	AutoWire(&m)
-	m.L1.Error("Meu erro!")
-	m.L2.Error("Meu erro!")
+	m.L1.Error("My error L1!")
+	m.L2.Error("My error L2!")
 	assert.Nil(t, m.L3)
+}
+
+func TestWireWithType(t *testing.T) {
+	setUp()
+	err := Wire(new(Logger), new(MyPersonalLogger2))
+	assert.Nil(t, err)
+	l := *Construct[Logger]()
+	l.Error("Error type wired")
 }

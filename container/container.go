@@ -7,7 +7,25 @@ import (
 
 var registry map[reflect.Type]interface{} = map[reflect.Type]interface{}{}
 
-func Wire(fn interface{}) error {
+func Wire(inter interface{}, impl interface{}) error {
+	var fType reflect.Type
+
+	if fType = reflect.TypeOf(inter); fType.Kind() == reflect.Ptr {
+		fType = reflect.Indirect(reflect.ValueOf(inter)).Type()
+	}
+
+	if fType.Kind() == reflect.Interface {
+		constructor := reflect.MakeFunc(reflect.FuncOf([]reflect.Type{}, []reflect.Type{fType}, false), func(args []reflect.Value) (results []reflect.Value) {
+			return []reflect.Value{reflect.ValueOf(impl)}
+		})
+		registry[fType] = constructor.Interface()
+		return nil
+	} else {
+		return fmt.Errorf("%v is not an interface, but %v instead", fType, fType.Kind())
+	}
+}
+
+func WireFactory(fn interface{}) error {
 	fType := reflect.TypeOf(fn)
 
 	if fType.Kind() != reflect.Func {
@@ -32,7 +50,7 @@ func AutoWire(obj interface{}) error {
 	if oType.Kind() == reflect.Interface {
 		constructor, exists := registry[oType]
 		if !exists {
-			return fmt.Errorf("non implemented type %v", oType)
+			return fmt.Errorf("type %v not implemented", oType)
 		}
 		oType = findImplementation(constructor, oType)
 	}
