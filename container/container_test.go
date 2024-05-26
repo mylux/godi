@@ -103,3 +103,12 @@ func TestWireWithType(t *testing.T) {
 	l := *Construct[Logger]()
 	l.Error("Error type wired")
 }
+
+func TestWireNoInterface(t *testing.T) {
+	setUp()
+	err := Wire(new(Logger), new(MyPersonalLogger2))
+	assert.Nil(t, err)
+	l := Construct[MyPersonalLogger2]()
+	assert.NotNil(t, l)
+	l.Error("Error wired no interface")
+}

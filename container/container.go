@@ -137,6 +137,8 @@ func construct(fType reflect.Type) ([]reflect.Value, error) {
 			args = nil
 		}
 		return reflect.ValueOf(constructor).Call(args), nil
+	} else if fType.Kind() != reflect.Interface {
+		return []reflect.Value{reflect.Indirect(reflect.New(fType))}, nil
 	}
 	return nil, fmt.Errorf("no constructor found for type %v", fType)
 }
