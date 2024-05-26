@@ -115,7 +115,7 @@ This should output:
 In the example above, the function return type identifies the interface that will be implemented. If godi has a function that can construct the implementation, it does not have to know what is the underlying type. It will simply run the function.
 
 ### Parametrized Factory
-If your factory fucntion has parameters, they can be automatically constructed too, as long as you have already wired them before. See the example below:
+If your factory function has parameters, they can be automatically constructed too, as long as you have already wired them before. See the example below:
 
 ```go
 import "github.com/mylux/godi/container"
