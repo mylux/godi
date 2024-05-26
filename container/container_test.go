@@ -58,6 +58,15 @@ type ManyLoggers struct {
 	L3 Logger
 }
 
+type LogAssistant struct {
+}
+
+type ManyLoggersWithNoInterfaceFields struct {
+	L1 Logger       `autowired:""`
+	L2 Logger       `autowired:""`
+	A  LogAssistant `autowired:""`
+}
+
 func setUp() {
 	CleanRegistry()
 }
@@ -106,9 +115,18 @@ func TestWireWithType(t *testing.T) {
 
 func TestWireNoInterface(t *testing.T) {
 	setUp()
-	err := Wire(new(Logger), new(MyPersonalLogger2))
+	err := Wire(new(Logger), new(MyPersonalLogger1))
 	assert.Nil(t, err)
 	l := Construct[MyPersonalLogger2]()
 	assert.NotNil(t, l)
 	l.Error("Error wired no interface")
+}
+
+func TestAutoWireNonInterface(t *testing.T) {
+	setUp()
+	err := Wire(new(Logger), new(MyPersonalLogger1))
+	assert.Nil(t, err)
+	x := ManyLoggersWithNoInterfaceFields{}
+	AutoWire(&x)
+	assert.NotNil(t, x.L1, x.L2, x.A)
 }
