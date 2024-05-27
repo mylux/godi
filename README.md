@@ -175,5 +175,50 @@ This should output:
 
 In the example before, the OutdoorEvent is set to be implemented by RoadTripEvent, so the IsTrip() function will be always true. When constructing the Car object, the OutdoorEvent will be constructed first, using the type that was defined earlier and passed to the factory function that makes a car. As IsTrip() will be true, the car wil be Mercedes Maybach S680 (What a car, BTW!) and the gear will be shifted using its 9Gtronic transmission
 
+## Constructing and wiring non-interfaced types
+> **_NOTE:_**  New in version 0.2.0
+
+You can provide constructors for non-interfaced wires too if your facory function requires a parameter.
+
+If all you need is a simple `MyType{}` instanciation without anything special, godi can construct this with no wiring or configuration.
+
+Why would you use it?
+
+Imagine you Have the following struct:
+```go
+type NationalIdDocument {
+
+}
+
+type Car iterface {
+  ShiftGear()
+}
+
+type Civic struct {
+
+}
+
+func (c Civic) ShiftGear(){
+  return "Shifting gear with CVT transmission..."
+}
+
+type Person struct {
+  DailyDriver Car                 `autowired:""`
+  RoadTrip    Car                 `autowired:""`
+  IdDoc       NationalIdDocument  `autowired:""`
+}
+
+```
+
+In the example above, you have the interface Car that is implemented by the Civic type, but NationalIdDocument is not an interface, but a struct.
+
+Thanks to the ability of constructing the struct with a simple instantiation (as you would do with a `container.Construct[NationalIdDocument]()`), you can safely AutoWire the Person struct and it will construct the Person with two Civic cars (No Mercedes this time :disappointed:) and an empty NationalIdDocument in the IdDoc field, by doing this:
+```go
+func main(){
+  p := Person{}
+  container.AutoWire(&p)
+}
+```
+
 ## Contributing
 Interested in the project? Feel free to open issues, send Pull Requests and I will gladly look at those!
