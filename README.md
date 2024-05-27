@@ -215,6 +215,7 @@ In the example above, you have the interface Car that is implemented by the Civi
 Thanks to the ability of constructing the struct with a simple instantiation (as you would do with a `container.Construct[NationalIdDocument]()`), you can safely AutoWire the Person struct and it will construct the Person with two Civic cars (No Mercedes this time :disappointed:) and an empty NationalIdDocument in the IdDoc field, by doing this:
 ```go
 func main(){
+  container.Wire(new(Car), new(Civic))
   p := Person{}
   container.AutoWire(&p)
 }
