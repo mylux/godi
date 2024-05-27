@@ -190,7 +190,7 @@ type NationalIdDocument struct {
 
 }
 
-type Car iterface {
+type Car interface {
   ShiftGear()
 }
 
