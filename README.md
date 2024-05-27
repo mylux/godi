@@ -186,7 +186,7 @@ Why would you use it?
 
 Imagine you Have the following struct:
 ```go
-type NationalIdDocument {
+type NationalIdDocument struct {
 
 }
 
