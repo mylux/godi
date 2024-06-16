@@ -53,8 +53,8 @@ func createLogger(t LoggerType) Logger {
 }
 
 type ManyLoggers struct {
-	L1 Logger `autowired:""`
-	L2 Logger `autowired:""`
+	L1 Logger `godi:"autowired"`
+	L2 Logger `godi:"autowired"`
 	L3 Logger
 }
 
@@ -62,9 +62,9 @@ type LogAssistant struct {
 }
 
 type ManyLoggersWithNoInterfaceFields struct {
-	L1 Logger       `autowired:""`
-	L2 Logger       `autowired:""`
-	A  LogAssistant `autowired:""`
+	L1 Logger       `godi:"autowired"`
+	L2 Logger       `godi:"autowired"`
+	A  LogAssistant `godi:"autowired"`
 }
 
 func setUp() {

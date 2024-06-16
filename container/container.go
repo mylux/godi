@@ -3,7 +3,12 @@ package container
 import (
 	"fmt"
 	"reflect"
+	"slices"
+	"strings"
 )
+
+const godiTagName = "godi"
+const godiAutoWireTagValue = "autowired"
 
 var registry map[reflect.Type]interface{} = map[reflect.Type]interface{}{}
 
@@ -57,7 +62,7 @@ func AutoWire(obj interface{}) error {
 
 	for i := 0; i < oType.NumField(); i++ {
 		field := oType.Field(i)
-		if _, exists := field.Tag.Lookup("autowired"); exists {
+		if isAutoWire(field) {
 			fieldType := field.Type
 			constructedItems, err := construct(fieldType)
 			if err != nil {
@@ -107,6 +112,13 @@ func CleanRegistry() {
 		delete(registry, t)
 	}
 
+}
+
+func isAutoWire(field reflect.StructField) bool {
+	if v, exists := field.Tag.Lookup(godiTagName); exists {
+		return slices.Contains(strings.Split(v, ","), godiAutoWireTagValue)
+	}
+	return false
 }
 
 func findImplementation(constructor interface{}, t reflect.Type) reflect.Type {
