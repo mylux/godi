@@ -43,7 +43,7 @@ This should output:
 `"CVT Module simulating gear..."`
 
 ## AutoWire support
-Using the `autowired` tag in a struct field allows the injector to automatically construct the object by using the `AutoWire` function
+Using the `godi:"autowired"` tag in a struct field allows the injector to automatically construct the object by using the `AutoWire` function
 ```go
 import "github.com/mylux/godi/container"
 
@@ -60,7 +60,7 @@ func (c Civic) ShiftGear(){
 }
 
 type Person struct {
- DailyVehicle Car `autowired:""`
+ DailyVehicle Car `godi:"autowired"`
  RoadTripVehicle Car
 }
 
@@ -203,9 +203,9 @@ func (c Civic) ShiftGear(){
 }
 
 type Person struct {
-  DailyDriver Car                 `autowired:""`
-  RoadTrip    Car                 `autowired:""`
-  IdDoc       NationalIdDocument  `autowired:""`
+  DailyDriver Car                 `godi:"autowired"`
+  RoadTrip    Car                 `godi:"autowired"`
+  IdDoc       NationalIdDocument  `godi:"autowired"`
 }
 
 ```
